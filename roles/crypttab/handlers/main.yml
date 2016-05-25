@@ -1,0 +1,7 @@
+---
+- name: restart cryptdisks
+  shell: /etc/init.d/cryptdisks restart
+  register: cryptdisksstatus 
+
+- name: mount fstab
+  shell: mount -a

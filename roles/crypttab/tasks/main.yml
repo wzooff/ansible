@@ -1,0 +1,16 @@
+--- 
+- name: add entry to /etc/crypttab
+  lineinfile:
+    dest: "/etc/crypttab"
+    line: "swap /dev/mapper/{{ lvmgroup }}--vg-swap_1 /dev/urandom swap,noearly"
+    state: present
+  notify: restart cryptdisks
+
+- name: add to fstab
+  mount:
+    name: none
+    fstype: swap
+    src: /dev/mapper/swap
+    opts: sw
+    state: present    
+  notify: mount fstab

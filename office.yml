@@ -1,0 +1,8 @@
+---
+- hosts: office
+  sudo: yes  
+  roles:
+  - rdp
+  - xfce
+  - graphics
+  - epson

@@ -1,0 +1,63 @@
+---
+- name: add key for ivideon repo
+  apt_key:
+    url=http://packages.ivideon.com/ubuntu/keys/ivideon.key
+    state=present
+
+- name: add ivideon repository
+  apt_repository:
+    repo: "deb http://packages.ivideon.com/ubuntu stable non-free"
+    state: present
+    update_cache: yes
+
+- name: install ivideon
+  apt:
+    name=ivideon-server-headless
+    state=latest
+
+- name: create Ivideon folders
+  file:
+    path: /home/{{ ansible_ssh_user }}/{{ item }}
+    state: directory
+    mode: 0750
+    owner: "{{ ansible_ssh_user }}"
+  with_items:
+  - .IvideonServer
+  - .IvideonServer/archive
+
+- stat: 
+    path: /home/{{ ansible_ssh_user }}/.IvideonServer/archive    
+  register: p
+
+- name: get volume size
+  shell: df -h -BM | grep .IvideonServer | awk '{print ($2-30)*1024 }'
+  register: ivideonarcsize
+
+- name: create ivideon config
+  template:
+    src: videoserverd.j2
+    dest: /home/{{ ansible_ssh_user }}/.IvideonServer/videoserverd.config
+    mode: 0640
+    owner: "{{ ansible_ssh_user }}"
+  when: p.stat.exists == True
+    
+- name: create folder for ivideon startup config
+  file:
+    path: /etc/ivideon
+    state: directory
+    mode: 0750
+    owner: root
+
+- name: create startup config for ivideon
+  template:
+    src: server.j2
+    dest: /etc/ivideon/server.conf
+    mode: 0640
+    owner: root
+
+- name: enable ivideon service
+  service:
+    name: videoserver
+    enabled: yes
+    state: restarted
+   

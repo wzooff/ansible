@@ -1,0 +1,33 @@
+---
+- name: Install Scan dependencies
+  apt: name={{ item }} state=installed
+  with_items:
+  - lsb
+  - xsltproc
+  - python-pycurl
+          
+- name: Add printer repository.
+  apt_repository: repo='deb http://download.ebz.epson.net/dsc/op/stable/debian/ lsb3.2 main' state=present update_cache=yes
+
+- name: Install Printer drivers.
+  apt: name={{ item }} state=installed force=yes
+  with_items:
+  - hplip
+  - epson-inkjet-printer-escpr 
+
+- name: Copy Scan DEB files
+  copy: src={{ item }} dest=/tmp/deb/
+  with_items: "{{ scandeb }}"
+
+- name: Install Deb packages for scanners
+  shell: dpkg -i /tmp/deb/*.deb creates=/etc/sane.d/epkowa.conf
+
+- name: Clean tmp dir
+  file: path=/tmp/deb state=absent
+
+- name: Add M200 mfp to notebooks.
+  lineinfile:
+    dest: "/etc/sane.d/epkowa.conf"
+    line: "net {{ item }}"
+    state: present
+  with_items: "{{ mfp }}"

@@ -1,0 +1,34 @@
+---
+- stat: path=/dev/mapper/videoc
+  register: p
+
+- name: copy cryptokey to server
+  copy:
+    src: /home/duty/ansible/keys/{{ ansible_hostname }}
+    dest: /dev/shm/
+    owner: root
+    group: root
+    mode: 0400
+  when: p.stat.exists != True
+
+- name: decrypt volume
+  shell: >
+    cryptsetup luksOpen /dev/mapper/{{ lvmgroup }}--vg-video videoc \
+    --key-file=/dev/shm/{{ ansible_hostname }}
+  notify: setup ivideon folder
+  when: p.stat.exists != True
+
+- name: remove keyfile
+  file:
+    path: /dev/shm/{{ ansible_hostname }}
+    state: absent
+  
+- name: mount ivideon
+  mount: 
+    name: /home/{{ ansible_ssh_user }}/.IvideonServer
+    src: /dev/mapper/videoc
+    state: mounted
+    opts: rw,noauto
+    fstype: ext4
+  notify: 
+  - setup ivideon folder

@@ -1,0 +1,26 @@
+---
+rdpuser: user
+rdpdomain: MSD
+rdpserver: server1.com
+
+ansible_ssh_user: user
+
+bookmarks:
+- smb://{{ rdpuser }}@server.com BookmarkName
+
+
+mfp:
+- 192.168.1.21
+
+
+toinstall:
+- mc
+- tmux
+- x11vnc
+- language-pack-gnome-ru
+- libreoffice-l10n-ru
+- firefox-locale-ru
+
+todelete:
+- transmission-common
+

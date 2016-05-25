@@ -1,0 +1,5 @@
+---
+lvmgroup: videostor
+
+ivideonpw: "password"
+

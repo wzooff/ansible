@@ -1,0 +1,9 @@
+---
+- name: setup ivideon folder      
+  file:
+    path: /home/{{ ansible_ssh_user }}/.IvideonServer
+    state: directory
+    mode: 0750
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
+

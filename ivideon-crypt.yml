@@ -1,0 +1,35 @@
+---
+- hosts: video-tmp
+  sudo: yes
+  roles:
+  - preconfig
+  - crypttab
+
+  tasks:
+  - name: copy cryptokey to server
+    copy:
+      src: /home/user/ansible/keys/{{ ansible_hostname }}
+      dest: /dev/shm/
+      owner: root
+      group: root
+      mode: 0400
+
+  - name: create crypted volume
+    shell: >
+      cryptsetup luksFormat /dev/mapper/{{ lvmgroup }}--vg-video \
+      /dev/shm/{{ ansible_hostname }} --batch-mode
+
+
+  - name: decrypt volume
+    shell: >
+      cryptsetup luksOpen /dev/mapper/{{ lvmgroup }}--vg-video videoc \
+      --key-file=/dev/shm/{{ ansible_hostname }}
+
+  - name: create filesystem
+    shell: mkfs.ext4 /dev/mapper/videoc
+
+  - name: remove keyfile
+    file:
+      path: /dev/shm/{{ ansible_hostname }}
+      state: absent
+

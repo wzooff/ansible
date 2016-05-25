@@ -1,0 +1,8 @@
+---
+- name: Install some additional staff
+  apt: name={{ item }} state=installed
+  with_items: "{{ toinstall }}"
+
+- name: Remove some stuff
+  apt: name={{ item }} state=absent purge=yes
+  with_items: "{{ todelete }}"

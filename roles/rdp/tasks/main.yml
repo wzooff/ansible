@@ -1,0 +1,15 @@
+---
+- name: Download 2XClient
+  get_url: url=http://www.2x.com/downloads/rdp-clients/2xclient.deb dest=/tmp/2xclient.deb
+
+- name: Install 2XClient
+  apt: deb=/tmp/2xclient.deb force=yes
+
+- name: Install Freerdp and RDesktop
+  apt: name={{ item }} state=latest
+  with_items:
+  - rdesktop
+  - freerdp-x11
+
+- name: Install dependencies
+  shell: apt-get install -f -y

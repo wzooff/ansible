@@ -1,0 +1,22 @@
+---
+- name: Create dir if not exist
+  file:
+    path: /home/user/.config/gtk-3.0
+    state: directory
+    owner: user
+    group: user
+
+- name: Create file if not exist
+  file:
+    path: /home/user/.config/gtk-3.0/bookmarks
+    state: touch
+    owner: user
+    group: user
+    mode: 0664
+
+- name: Add bookmarks
+  lineinfile:
+    dest: "/home/user/.config/gtk-3.0/bookmarks"
+    line: "{{ item }}"
+    state: present
+  with_items: "{{ bookmarks }}"

@@ -1,0 +1,8 @@
+---
+- hosts: video
+  sudo: yes
+  vars_files: 
+  - cameras/{{ ansible_hostname }}.yml
+  roles:
+  - decrypt-ivideon
+  - ivideon

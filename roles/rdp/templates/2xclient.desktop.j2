@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=appserverclient
+Exec=/opt/2X/Client/bin/appserverclient -m MS -u {{ rdpuser }} -d {{ rdpdomain }} -t 15 -z 0x03 -s {{ rdpserver }}
+Icon=/usr/share/pixmaps/2X.png
+Type=Application
+MimeType=x-scheme-handler/tuxclient;
+Terminal=false
+StartupNotify=true
+NoDisplay=true
+Categories=Application;Network;
+Name[ru_UA]=Server({{ rdpserver }})
+

@@ -1,0 +1,3 @@
+instead of this file you should put your key, which will crypt your partition
+
+name should be as machine hostname

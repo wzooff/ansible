@@ -1,0 +1,7 @@
+---
+- name: deploy ssh keys
+  authorized_key: user={{ ansible_ssh_user }} key="{{ lookup('file', '/home/user/.ssh/id_rsa.pub') }}"
+
+- name: Update apt cache if needed.
+  apt: update_cache=yes cache_valid_time=86400
+

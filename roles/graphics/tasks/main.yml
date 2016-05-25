@@ -1,0 +1,12 @@
+---
+- name: Download XnConvert
+  get_url: url=http://download.xnview.com/XnConvert-linux.deb dest=/tmp/XnConvert-linux.deb
+
+- name: Install XnConvert
+  apt: deb=/tmp/XnConvert-linux.deb force=yes
+
+- name: Install Krita
+  apt: name=krita state=latest
+
+- name: Install dependencies
+  shell: apt-get install -f -y

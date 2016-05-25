@@ -1,0 +1,44 @@
+{
+   "archive" : {
+      "maxEventLogSize" : 20480,
+      "path" : "/home/{{ ansible_ssh_user }}/.IvideonServer/archive",
+      "sizeLimit" : {{ ivideonarcsize.stdout }}, 
+      "sizeToCleanup" : 512,
+      "useArchive" : true,
+      "webcamBitRate" : 2048,
+      "webcamFrameRate" : 5,
+      "webcamVideoFormat" : 1
+   },
+   "cameras" : [
+      
+      {% for camera in cameras %}
+    {
+         "id" : {{ loop.index }},
+         "mdSensitivity" : 50,
+         "name" : "{{ camera.name }}",
+         "recordType" : "motion",
+         "rtspTransport" : "auto",
+         "urlHigh" : "{{ camera.urlHigh }}",
+         "useCameraMotionDetector" : false,
+         "useSound" : true
+      }{% if loop.last == False %},{% endif %}
+      {% endfor %}
+
+   ],
+   "externalScheduleFile" : "/home/{{ ansible_ssh_user }}/.IvideonServer/schedule.json",
+   "localView" : {
+      "passwordHash" : "{{ ivideonpw|hash('md5') }}",
+      "proxyPort" : 3101,
+      "streamerPort" : 8080
+   },
+   "logging" : {
+      "isTruncate" : false,
+      "path" : "/home/{{ ansible_ssh_user }}/.IvideonServer/service.log"
+   },
+   "network" : {
+      "ivideonProxyHost" : "proxy.ivideon.com"
+   },
+   "system" : {
+      "cwd" : "/home/{{ ansible_ssh_user }}/.IvideonServer"
+   }
+}
